@@ -1,1 +1,1 @@
-# Projects-and-Assignment-BMG
+# Projects-and-Assignments-BMG
