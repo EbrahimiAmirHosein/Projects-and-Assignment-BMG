@@ -1,0 +1,4 @@
+# Ignore API keys
+*.key
+*.env
+*.secret
