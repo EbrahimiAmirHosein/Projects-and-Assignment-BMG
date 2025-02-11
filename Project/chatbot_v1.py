@@ -28,7 +28,7 @@ def chat_with_gpt(prompt, messages, model="gpt-4"):
         model=model,
         messages=messages,
         max_tokens=150,
-        temperature=0.7
+        temperature=0.1
     )
     gpt_response = completion.choices[0].message.content.strip()
 
@@ -38,7 +38,39 @@ def chat_with_gpt(prompt, messages, model="gpt-4"):
 
 def chatbot(mode="text", audio_file_path=None):
     conversation_history = [
-        {"role": "system", "content": "You are a helpful assistant."}
+        {
+  "role": "system",
+  "content": "If the user/doctor provided you with initial prescription, please provide it with the following structure:",
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "PrescriptionForm": {
+        "DiagnosisInformation": {
+          "Diagnosis": "Select a diagnosis",
+          "Medicine": "Select a medicine"
+        },
+        "MedicationDetails": {
+          "Dose": {
+            "Unit": "Unit",
+            "Frequency": "Frequency",
+            "Quantity": 0
+          },
+          "Duration": {
+            "Unit": "Unit",
+            "Days": "Days",
+            "Quantity": 0
+          },
+          "Route": {
+            "Unit": "Unit",
+            "Refill": "Refill",
+            "Pharmacy": "Pharmacy"
+          }
+        },
+        "Description": ""
+      }
+    }
+  }
+}
     ]
 
     if mode == "voice":
