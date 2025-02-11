@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 from openai import OpenAI
-import pyaudio
+# import pyaudio
 import wave
 import requests
 import json
@@ -61,7 +61,7 @@ def chatbot(mode="text", audio_file_path=None):
             print(f"Chatbot: {gpt_response}")
     else:
         while True:
-            user_input = input("User: ")
+            user_input = input("Doctor: ")
 
             if user_input.lower() in ["exit", "quit"]:
                 print("Goodbye!")
