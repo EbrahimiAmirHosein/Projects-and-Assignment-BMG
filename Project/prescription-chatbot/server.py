@@ -7,14 +7,12 @@ import json
 import pyaudio
 import wave
 
-# Load environment variables
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
-# Initialize Flask app
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)  
 
 
 
@@ -51,7 +49,6 @@ def record_audio(file_path, record_seconds=20):
     wf.writeframes(b''.join(frames))
     wf.close()
 
-# Function to transcribe audio
 def transcribe_audio(file_path):
     with open(file_path, "rb") as audio_file:
         transcript = client.audio.transcriptions.create(
@@ -60,7 +57,6 @@ def transcribe_audio(file_path):
         )
     return transcript.text
 
-# Function to chat with GPT
 def chat_with_gpt(prompt, messages, model="gpt-4"):
     messages.append({"role": "user", "content": prompt})
 
@@ -110,7 +106,6 @@ def chat():
         return jsonify({"error": "No text provided"}), 400
 
     try:
-        # Define a system message to instruct OpenAI to return structured JSON
         system_message = {
             "role": "system",
             "content": "You are a helpful assistant that generates prescriptions. Always return the prescription in the following JSON format: (Warn doctor in Description if you suspect any drug conflicts). If any information is missing, use 'None' as the value for that field."
@@ -135,22 +130,18 @@ def chat():
                        "}"
         }
 
-        # Send the user input to OpenAI
         completion = client.chat.completions.create(
             model="gpt-4",
             messages=[system_message, {"role": "user", "content": user_input}],
-            max_tokens=500,  # Increased token limit
+            max_tokens=500,  
             temperature=0.1
         )
 
-        # Extract the response from OpenAI
         gpt_response = completion.choices[0].message.content.strip()
         print("OpenAI Response:", gpt_response)  # Log the OpenAI response
 
-        # Fix malformed JSON (e.g., replace hyphens in numeric fields with strings)
-        gpt_response = gpt_response.replace('1-2', '"1-2"')  # Example fix for "1-2"
+        gpt_response = gpt_response.replace('1-2', '"1-2"')
 
-        # Check if the response is a complete JSON object
         if not gpt_response.strip().endswith("}"):
             print("OpenAI response is incomplete. Returning default response.")
             return jsonify({
@@ -176,11 +167,9 @@ def chat():
                 }
             })
 
-        # Parse the response into a JSON object
         try:
             prescription = json.loads(gpt_response)
 
-            # Ensure all fields are present, filling in 'None' for missing fields
             for p in prescription.get("Prescriptions", []):
                 p.setdefault("DiagnosisInformation", {"Diagnosis": None, "Medicine": None})
                 p.setdefault("MedicationDetails", {
@@ -259,15 +248,12 @@ def transcribe():
         return jsonify({"error": "No selected file"}), 400
 
     try:
-        # Save the uploaded file temporarily
         file_path = "temp_recording.wav"
         file.save(file_path)
 
-        # Transcribe the audio
         user_input = transcribe_audio(file_path)
         print("Transcribed Text:", user_input)
 
-        # Define the system message (same as in /chat)
         system_message = {
             "role": "system",
             "content": "You are a helpful assistant that generates prescriptions. Always return the prescription in the following JSON format: (Warn doctor in Description if you suspect any drug conflicts). If any information is missing, use 'None' as the value for that field."
@@ -292,7 +278,6 @@ def transcribe():
                        "}"
         }
 
-        # Send the transcribed text to OpenAI
         completion = client.chat.completions.create(
             model="gpt-4",
             messages=[system_message, {"role": "user", "content": user_input}],
@@ -300,14 +285,9 @@ def transcribe():
             temperature=0.1
         )
 
-        # Extract the response from OpenAI
         gpt_response = completion.choices[0].message.content.strip()
         print("OpenAI Response:", gpt_response)
 
-        # Fix malformed JSON (e.g., replace hyphens in numeric fields with strings)
-        # gpt_response = gpt_response.replace('1-2', '"1-2"')
-
-        # Check if the response is a complete JSON object
         if not gpt_response.strip().endswith("}"):
             
             print("OpenAI response is incomplete**********. Returning default response.")
@@ -334,11 +314,8 @@ def transcribe():
                 }
             })
 
-        # Parse the response into a JSON object
         try:
             prescription = json.loads(gpt_response)
-            print("+++++++ ++++++++++" , prescription)
-            # Ensure all fields are present, filling in 'None' for missing fields
             for p in prescription.get("Prescriptions", []):
                 p.setdefault("DiagnosisInformation", {"Diagnosis": None, "Medicine": None})
                 p.setdefault("MedicationDetails", {
