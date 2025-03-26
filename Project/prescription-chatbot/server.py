@@ -4,8 +4,6 @@ from dotenv import load_dotenv
 import os
 from openai import OpenAI
 import json
-import pyaudio
-import wave
 
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
@@ -15,39 +13,6 @@ app = Flask(__name__)
 CORS(app)  
 
 
-
-
-def record_audio(file_path, record_seconds=20):
-    FORMAT = pyaudio.paInt16
-    CHANNELS = 1
-    RATE = 44100
-    CHUNK = 1024
-
-    audio = pyaudio.PyAudio()
-
-    stream = audio.open(format=FORMAT, channels=CHANNELS,
-                        rate=RATE, input=True,
-                        frames_per_buffer=CHUNK)
-
-    print("Recording...")
-    frames = []
-
-    for _ in range(0, int(RATE / CHUNK * record_seconds)):
-        data = stream.read(CHUNK)
-        frames.append(data)
-
-    print("Finished recording.")
-
-    stream.stop_stream()
-    stream.close()
-    audio.terminate()
-
-    wf = wave.open(file_path, 'wb')
-    wf.setnchannels(CHANNELS)
-    wf.setsampwidth(audio.get_sample_size(FORMAT))
-    wf.setframerate(RATE)
-    wf.writeframes(b''.join(frames))
-    wf.close()
 
 def transcribe_audio(file_path):
     with open(file_path, "rb") as audio_file:
@@ -93,10 +58,85 @@ conversation_history = [
                    "\"Pharmacy\": \"<pharmacy>\" "
                    "}, "
                    "\"Description\": \"<description>\" "
-                   "} ], "
+                   "} ] "
                    "}"
     }
 ]
+
+@app.route('/transcribe_stream', methods=['POST'])
+def transcribe_stream():
+    if 'audio' not in request.files:
+        return jsonify({"error": "No audio file provided"}), 400
+
+    audio_file = request.files['audio']
+    
+    try:
+        # Transcribe the audio stream directly
+        transcript = client.audio.transcriptions.create(
+            model="whisper-1",
+            file=audio_file
+        )
+        user_input = transcript.text
+        # print("Transcribed Text:", user_input)
+
+        # Generate prescription from transcribed text
+        system_message = {
+            "role": "system",
+            "content": conversation_history[0]["content"]
+        }
+
+        completion = client.chat.completions.create(
+            model="gpt-4",
+            messages=[system_message, {"role": "user", "content": user_input}],
+            max_tokens=500,
+            temperature=0.1
+        )
+
+        gpt_response = completion.choices[0].message.content.strip()
+        # print("OpenAI Response:", gpt_response)
+
+        # Handle potential JSON formatting issues
+        try:
+            gpt_response = gpt_response.replace('1-2', '"1-2"')
+            prescription = json.loads(gpt_response)
+            
+            # Ensure all fields are present
+            for p in prescription.get("Prescriptions", []):
+                p.setdefault("DiagnosisInformation", {"Diagnosis": None, "Medicine": None})
+                p.setdefault("MedicationDetails", {
+                    "Dose": None,
+                    "DoseUnit": None,
+                    "DoseRoute": None,
+                    "Frequency": None,
+                    "FrequencyDuration": None,
+                    "FrequencyUnit": None,
+                    "Quantity": None,
+                    "QuantityUnit": None,
+                    "Refill": None,
+                    "Pharmacy": None
+                })
+                p.setdefault("Description", None)
+
+            return jsonify({
+                "response": prescription,
+                "transcript": user_input
+            })
+            
+        except json.JSONDecodeError as e:
+            # print("Failed to parse response as JSON:", str(e))
+            return jsonify({
+                "error": "Failed to generate prescription",
+                "transcript": user_input,
+                "details": str(e)
+            }), 500
+
+    except Exception as e:
+        # print("Error in transcription:", str(e))
+        return jsonify({
+            "error": "Audio processing failed",
+            "details": str(e)
+        }), 500
+
 
 @app.route('/chat', methods=['POST'])
 def chat():
@@ -109,25 +149,25 @@ def chat():
         system_message = {
             "role": "system",
             "content": "You are a helpful assistant that generates prescriptions. Always return the prescription in the following JSON format: (Warn doctor in Description if you suspect any drug conflicts). If any information is missing, use 'None' as the value for that field."
-                       "{ "
-                       "\"Prescriptions\": [ "
-                       "{ "
-                       "\"DiagnosisInformation\": { \"Diagnosis\": \"<diagnosis>\", \"Medicine\": \"<medicine>\" }, "
-                       "\"MedicationDetails\": { "
-                       "\"Dose\": \"<dose>\", "
-                       "\"DoseUnit\": \"<dose unit>\", "
-                       "\"DoseRoute\": \"<dose route>\", "
-                       "\"Frequency\": \"<frequency>\", "
-                       "\"FrequencyDuration\": \"<frequency duration>\", "
-                       "\"FrequencyUnit\": \"<frequency unit>\", "
-                       "\"Quantity\": \"<quantity>\", "
-                       "\"QuantityUnit\": \"<quantity unit>\", "
-                       "\"Refill\": \"<refill>\", "
-                       "\"Pharmacy\": \"<pharmacy>\" "
-                       "}, "
-                       "\"Description\": \"<description>\" "
-                       "} ], "
-                       "}"
+                    "{ "
+                    "\"Prescriptions\": [ "
+                    "{ "
+                    "\"DiagnosisInformation\": { \"Diagnosis\": \"<diagnosis>\", \"Medicine\": \"<medicine>\" }, "
+                    "\"MedicationDetails\": { "
+                    "\"Dose\": \"<dose>\", "
+                    "\"DoseUnit\": \"<dose unit>\", "
+                    "\"DoseRoute\": \"<dose route>\", "
+                    "\"Frequency\": \"<frequency>\", "
+                    "\"FrequencyDuration\": \"<frequency duration>\", "
+                    "\"FrequencyUnit\": \"<frequency unit>\", "
+                    "\"Quantity\": \"<quantity>\", "
+                    "\"QuantityUnit\": \"<quantity unit>\", "
+                    "\"Refill\": \"<refill>\", "
+                    "\"Pharmacy\": \"<pharmacy>\" "
+                    "}, "
+                    "\"Description\": \"<description>\" "
+                    "} ] "
+                    "}"
         }
 
         completion = client.chat.completions.create(
@@ -138,12 +178,12 @@ def chat():
         )
 
         gpt_response = completion.choices[0].message.content.strip()
-        print("OpenAI Response:", gpt_response)  # Log the OpenAI response
+        # print("OpenAI Response:", gpt_response)  # Log the OpenAI response
 
         gpt_response = gpt_response.replace('1-2', '"1-2"')
 
         if not gpt_response.strip().endswith("}"):
-            print("OpenAI response is incomplete. Returning default response.")
+            # print("OpenAI response is incomplete. Returning default response.")
             return jsonify({
                 "response": {
                     "Prescriptions": [
@@ -188,7 +228,7 @@ def chat():
 
             return jsonify({"response": prescription})
         except json.JSONDecodeError as e:
-            print("Failed to parse OpenAI response as JSON. Returning default response.")
+            # print("Failed to parse OpenAI response as JSON. Returning default response.")
             return jsonify({
                 "response": {
                     "Prescriptions": [
@@ -213,7 +253,7 @@ def chat():
             })
 
     except Exception as e:
-        print("Error in /chat endpoint. Returning default response.")
+        # print("Error in /chat endpoint. Returning default response.")
         return jsonify({
             "response": {
                 "Prescriptions": [
@@ -252,7 +292,7 @@ def transcribe():
         file.save(file_path)
 
         user_input = transcribe_audio(file_path)
-        print("Transcribed Text:", user_input)
+        # print("Transcribed Text:", user_input)
 
         system_message = {
             "role": "system",
@@ -274,7 +314,7 @@ def transcribe():
                        "\"Pharmacy\": \"<pharmacy>\" "
                        "}, "
                        "\"Description\": \"<description>\" "
-                       "} ], "
+                       "} ] "
                        "}"
         }
 
@@ -286,11 +326,11 @@ def transcribe():
         )
 
         gpt_response = completion.choices[0].message.content.strip()
-        print("OpenAI Response:", gpt_response)
+        # print("OpenAI Response:", gpt_response)
 
         if not gpt_response.strip().endswith("}"):
             
-            print("OpenAI response is incomplete**********. Returning default response.")
+            # print("OpenAI response is incomplete**********. Returning default response.")
             return jsonify({
                 "response": {
                     "Prescriptions": [

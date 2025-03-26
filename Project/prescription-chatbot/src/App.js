@@ -12,7 +12,50 @@ function App() {
   const [isRecording, setIsRecording] = useState(false); // State for recording
   const [audioBlob, setAudioBlob] = useState(null); // State to store recorded audio
   const [isPlaying, setIsPlaying] = useState(false); // State for audio playback
+// In App.js
+  const [mediaRecorder, setMediaRecorder] = useState(null);
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const audioChunks = [];
+      
+      recorder.ondataavailable = (event) => {
+        audioChunks.push(event.data);
+      };
+      
+      recorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks);
+        await sendAudioToBackend(audioBlob);
+      };
+      
+      recorder.start(1000); // Send data every second
+      setMediaRecorder(recorder);
+      setIsRecording(true);
+    } catch (err) {
+      setError('Could not access microphone: ' + err.message);
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const sendAudioToBackend = async (audioBlob) => {
+    const formData = new FormData();
+    formData.append('audio', audioBlob);
+    
+    try {
+      const response = await axios.post('http://localhost:5000/transcribe_stream', formData);
+      setPrescription(response.data.response);
+    } catch (err) {
+      setError('Failed to transcribe: ' + err.message);
+    }
+  };
   // Handle text submission
   const handleTextSubmit = async (e) => {
     e.preventDefault();
