@@ -1,0 +1,25 @@
+Model,Dataset,Sample,Embedding Time (Clustering),Embedding Time (Binning),Binning Execution Time
+poisson,plant,5,1197.77,3962.02,1534.17
+poisson,plant,6,1188.19,3623.71,1443.23
+kmerprofile,plant,5,37.69,146.45,2938.58
+kmerprofile,plant,6,38.0,135.44,2584.1
+nonlinear,plant,5,340.74,144.36,2937.08
+nonlinear,plant,6,352.3,130.42,2552.63
+tfidf_umap,plant,5,58.57,430.61,1487.71
+tfidf_umap,plant,6,57.08,382.37,1213.88
+poisson,marine,5,3514.67,7510.84,3940.07
+poisson,marine,6,3699.7,8233.89,4182.77
+kmerprofile,marine,5,122.33,276.42,7469.73
+kmerprofile,marine,6,120.21,298.38,11822.38
+nonlinear,marine,5,328.05,270.34,7881.71
+nonlinear,marine,6,324.19,286.82,12173.63
+tfidf_umap,marine,5,186.21,831.65,3560.98
+tfidf_umap,marine,6,190.1,929.84,4421.88
+poisson,reference,5,2198.42,3954.67,410.56
+poisson,reference,6,2425.56,3010.58,258.11
+kmerprofile,reference,5,78.29,146.09,713.96
+kmerprofile,reference,6,77.84,110.23,483.76
+nonlinear,reference,5,342.13,142.65,836.4
+nonlinear,reference,6,367.69,108.04,494.36
+tfidf_umap,reference,5,122.96,256.75,403.21
+tfidf_umap,reference,6,127.76,199.51,265.31
