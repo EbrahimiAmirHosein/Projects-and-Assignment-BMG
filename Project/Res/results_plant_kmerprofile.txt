@@ -1,0 +1,21 @@
+
+==================================================
+Evaluation started at: 08/04/2025 17:14:46
+
+08/04/2025 18:08:16
+Model: kmerprofile, Species: plant, Sample: 5
+Recall: [np.int64(49), np.int64(47), np.int64(41), np.int64(32), np.int64(23)]
+F1: [np.int64(50), np.int64(41), np.int64(39), np.int64(34), np.int64(24)]
+Threshold: 0.1095
+Embedding time (clustering data): 37.69 sec
+Embedding time (binning data): 146.45 sec
+Binning execution time: 2938.58 sec
+
+08/04/2025 18:55:39
+Model: kmerprofile, Species: plant, Sample: 6
+Recall: [np.int64(44), np.int64(40), np.int64(34), np.int64(24), np.int64(21)]
+F1: [np.int64(38), np.int64(36), np.int64(32), np.int64(27), np.int64(21)]
+Threshold: 0.1095
+Embedding time (clustering data): 38.00 sec
+Embedding time (binning data): 135.44 sec
+Binning execution time: 2584.10 sec

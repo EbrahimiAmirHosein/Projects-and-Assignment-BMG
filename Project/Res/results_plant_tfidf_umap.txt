@@ -1,0 +1,21 @@
+
+==================================================
+Evaluation started at: 08/04/2025 20:51:22
+
+08/04/2025 21:29:15
+Model: tfidf_umap, Species: plant, Sample: 5
+Recall: [np.int64(43), np.int64(42), np.int64(37), np.int64(33), np.int64(24)]
+F1: [np.int64(41), np.int64(35), np.int64(32), np.int64(28), np.int64(19)]
+Threshold: 0.6654
+Embedding time (clustering data): 58.57 sec
+Embedding time (binning data): 430.61 sec
+Binning execution time: 1487.71 sec
+
+08/04/2025 22:01:40
+Model: tfidf_umap, Species: plant, Sample: 6
+Recall: [np.int64(41), np.int64(38), np.int64(34), np.int64(32), np.int64(23)]
+F1: [np.int64(38), np.int64(32), np.int64(28), np.int64(26), np.int64(21)]
+Threshold: 0.6654
+Embedding time (clustering data): 57.08 sec
+Embedding time (binning data): 382.37 sec
+Binning execution time: 1213.88 sec

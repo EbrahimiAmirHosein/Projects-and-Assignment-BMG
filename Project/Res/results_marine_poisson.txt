@@ -1,0 +1,24 @@
+
+==================================================
+Evaluation started at: 08/04/2025 22:01:40
+
+==================================================
+Evaluation started at: 09/04/2025 10:09:23
+
+09/04/2025 14:27:36
+Model: poisson, Species: marine, Sample: 5
+Recall: [np.int64(45), np.int64(32), np.int64(28), np.int64(24), np.int64(22)]
+F1: [np.int64(47), np.int64(31), np.int64(19), np.int64(11), np.int64(2)]
+Threshold: 0.9383
+Embedding time (clustering data): 3514.67 sec
+Embedding time (binning data): 7510.84 sec
+Binning execution time: 3940.07 sec
+
+09/04/2025 19:04:40
+Model: poisson, Species: marine, Sample: 6
+Recall: [np.int64(40), np.int64(29), np.int64(22), np.int64(17), np.int64(15)]
+F1: [np.int64(43), np.int64(26), np.int64(16), np.int64(7), np.int64(3)]
+Threshold: 0.9383
+Embedding time (clustering data): 3699.70 sec
+Embedding time (binning data): 8233.89 sec
+Binning execution time: 4182.77 sec

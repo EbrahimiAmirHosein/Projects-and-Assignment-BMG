@@ -1,0 +1,21 @@
+
+==================================================
+Evaluation started at: 10/04/2025 00:47:06
+
+10/04/2025 03:16:42
+Model: nonlinear, Species: marine, Sample: 5
+Recall: [np.int64(4), np.int64(3), np.int64(3), np.int64(3), np.int64(1)]
+F1: [np.int64(3), np.int64(1), np.int64(1), np.int64(0), np.int64(0)]
+Threshold: 0.3566
+Embedding time (clustering data): 328.05 sec
+Embedding time (binning data): 270.34 sec
+Binning execution time: 7881.71 sec
+
+10/04/2025 06:58:21
+Model: nonlinear, Species: marine, Sample: 6
+Recall: [np.int64(5), np.int64(5), np.int64(4), np.int64(3), np.int64(3)]
+F1: [np.int64(2), np.int64(2), np.int64(1), np.int64(1), np.int64(1)]
+Threshold: 0.3566
+Embedding time (clustering data): 324.19 sec
+Embedding time (binning data): 286.82 sec
+Binning execution time: 12173.63 sec

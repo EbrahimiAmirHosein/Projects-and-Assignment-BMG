@@ -1,0 +1,21 @@
+
+==================================================
+Evaluation started at: 08/04/2025 18:55:39
+
+08/04/2025 19:56:53
+Model: nonlinear, Species: plant, Sample: 5
+Recall: [np.int64(6), np.int64(5), np.int64(4), np.int64(4), np.int64(3)]
+F1: [np.int64(3), np.int64(1), np.int64(0), np.int64(0), np.int64(0)]
+Threshold: 0.3752
+Embedding time (clustering data): 340.74 sec
+Embedding time (binning data): 144.36 sec
+Binning execution time: 2937.08 sec
+
+08/04/2025 20:51:22
+Model: nonlinear, Species: plant, Sample: 6
+Recall: [np.int64(11), np.int64(9), np.int64(6), np.int64(6), np.int64(5)]
+F1: [np.int64(5), np.int64(3), np.int64(3), np.int64(1), np.int64(0)]
+Threshold: 0.3752
+Embedding time (clustering data): 352.30 sec
+Embedding time (binning data): 130.42 sec
+Binning execution time: 2552.63 sec

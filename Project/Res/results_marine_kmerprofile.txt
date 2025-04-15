@@ -1,0 +1,21 @@
+
+==================================================
+Evaluation started at: 09/04/2025 19:04:40
+
+09/04/2025 21:19:23
+Model: kmerprofile, Species: marine, Sample: 5
+Recall: [np.int64(159), np.int64(126), np.int64(101), np.int64(83), np.int64(66)]
+F1: [np.int64(152), np.int64(132), np.int64(110), np.int64(81), np.int64(67)]
+Threshold: 0.1028
+Embedding time (clustering data): 122.33 sec
+Embedding time (binning data): 276.42 sec
+Binning execution time: 7469.73 sec
+
+10/04/2025 00:47:06
+Model: kmerprofile, Species: marine, Sample: 6
+Recall: [np.int64(157), np.int64(120), np.int64(95), np.int64(88), np.int64(78)]
+F1: [np.int64(158), np.int64(137), np.int64(106), np.int64(87), np.int64(70)]
+Threshold: 0.1028
+Embedding time (clustering data): 120.21 sec
+Embedding time (binning data): 298.38 sec
+Binning execution time: 11822.38 sec

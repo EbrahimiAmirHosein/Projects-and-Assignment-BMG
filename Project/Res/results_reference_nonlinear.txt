@@ -1,0 +1,21 @@
+
+==================================================
+Evaluation started at: 10/04/2025 14:04:40
+
+10/04/2025 14:29:21
+Model: nonlinear, Species: reference, Sample: 5
+Recall: [np.int64(41), np.int64(22), np.int64(8), np.int64(1), np.int64(0)]
+F1: [np.int64(63), np.int64(37), np.int64(21), np.int64(8), np.int64(1)]
+Threshold: 0.2838
+Embedding time (clustering data): 342.13 sec
+Embedding time (binning data): 142.65 sec
+Binning execution time: 836.40 sec
+
+10/04/2025 14:47:42
+Model: nonlinear, Species: reference, Sample: 6
+Recall: [np.int64(52), np.int64(35), np.int64(16), np.int64(6), np.int64(2)]
+F1: [np.int64(67), np.int64(46), np.int64(31), np.int64(14), np.int64(5)]
+Threshold: 0.2838
+Embedding time (clustering data): 367.69 sec
+Embedding time (binning data): 108.04 sec
+Binning execution time: 494.36 sec

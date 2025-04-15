@@ -1,0 +1,21 @@
+
+==================================================
+Evaluation started at: 10/04/2025 14:47:42
+
+10/04/2025 15:03:29
+Model: tfidf_umap, Species: reference, Sample: 5
+Recall: [np.int64(159), np.int64(131), np.int64(115), np.int64(90), np.int64(66)]
+F1: [np.int64(176), np.int64(157), np.int64(130), np.int64(107), np.int64(69)]
+Threshold: 0.8073
+Embedding time (clustering data): 122.96 sec
+Embedding time (binning data): 256.75 sec
+Binning execution time: 403.21 sec
+
+10/04/2025 15:15:45
+Model: tfidf_umap, Species: reference, Sample: 6
+Recall: [np.int64(161), np.int64(130), np.int64(103), np.int64(76), np.int64(54)]
+F1: [np.int64(186), np.int64(163), np.int64(130), np.int64(96), np.int64(68)]
+Threshold: 0.8073
+Embedding time (clustering data): 127.76 sec
+Embedding time (binning data): 199.51 sec
+Binning execution time: 265.31 sec
